@@ -8,12 +8,19 @@ import { AppComponent } from './app.component';
 import { PlayerSettingsComponent } from './components/player-settings/player-settings.component';
 import { LoginComponent } from './components/login/login.component';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PlayerSettingsComponent,
-    LoginComponent
+    LoginComponent,
+    RegistrationComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +33,10 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
           whitelistedDomains: ['example.com'],
           blacklistedRoutes: ['example.com/examplebadroute/']
         }
-      })
+      }),
+      BsDropdownModule.forRoot(),
+      TooltipModule.forRoot(),
+      ModalModule.forRoot()
   ],
   providers: [ ],
   bootstrap: [AppComponent]

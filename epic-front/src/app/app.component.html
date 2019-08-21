@@ -1,12 +1,15 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
+    <h1>
+        {{ title }}!
+    </h1>
 </div>
 <nav>
-    <a routerLink="/login" routerLinkActive="active">Login</a>
-    <a routerLink="/settings" routerLinkActive="active">Settings</a>
-  </nav>
+    <a class="btn btn-primary" routerLink="/home" routerLinkActive="active">Accueil</a>
+    <a class="btn btn-primary" routerLink="/settings" routerLinkActive="active">Paramètres</a>
+    <a class="btn btn-primary" (click)="logOut()" *ngIf="isLogged()">Se déconnecter</a>
+    <a class="btn btn-primary" routerLink="/registering" routerLinkActive="active" *ngIf="!isLogged()">S'inscrire</a>
+    <a class="btn btn-primary" routerLink="/login" routerLinkActive="active" *ngIf="!isLogged()">Se connecter</a>
+</nav>
 
 <router-outlet></router-outlet>

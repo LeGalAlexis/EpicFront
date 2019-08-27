@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { PlayerSettingsService } from 'src/app/services/player-settings.service';
 
 @Component({
@@ -22,6 +22,12 @@ export class RegistrationComponent implements OnInit {
         this.playerService.register(form).subscribe(response => {
             console.log(response);
             this.invalidForm = false;
+            let navigationExtras: NavigationExtras = {
+                queryParams: {
+                    "from": "registration"
+                }
+            };
+            this.router.navigate(["/login"], navigationExtras);
         }, err => {
             this.invalidForm = true;
             console.log(err);

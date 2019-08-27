@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PlayerSettingsService } from 'src/app/services/player-settings.service';
+import { PlayerService } from 'src/app/services/player.service';
 
 @Component({
     selector: 'app-player-settings',
@@ -8,16 +8,10 @@ import { PlayerSettingsService } from 'src/app/services/player-settings.service'
 })
 export class PlayerSettingsComponent implements OnInit {
 
-    playerSettings: any;
-
-    constructor(private playerSettingsService: PlayerSettingsService) { }
+    constructor(private playerService: PlayerService) { }
 
     ngOnInit() {
-        this.playerSettingsService.getSettings().subscribe(response => {
-            this.playerSettings = response;
-        }, err => {
-            console.log(err)
-        });
+        this.playerService.refreshPlayer();
     }
 
 }

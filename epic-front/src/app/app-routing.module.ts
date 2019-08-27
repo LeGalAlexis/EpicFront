@@ -11,6 +11,7 @@ const routes: Routes = [
     { path: 'registering', component: RegistrationComponent },
     { path: 'home', component: HomeComponent },
     { path: 'settings', component: PlayerSettingsComponent, canActivate: [AuthGuard] },
+    { path: 'exploration', loadChildren: () => import('./components/exploration/exploration.module').then(mod => mod.ExplorationModule) },
     { path: '',
         redirectTo: '/home',
         pathMatch: 'full'

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, NavigationExtras } from '@angular/router';
-import { PlayerSettingsService } from 'src/app/services/player-settings.service';
+import { PlayerService } from 'src/app/services/player.service';
 
 @Component({
     selector: 'app-registration',
@@ -13,7 +13,7 @@ export class RegistrationComponent implements OnInit {
     invalidForm: boolean;
     result: string;
 
-    constructor(private playerService: PlayerSettingsService, private router: Router) { }
+    constructor(private playerService: PlayerService, private router: Router) { }
 
     ngOnInit() {
     }

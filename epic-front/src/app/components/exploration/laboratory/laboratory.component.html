@@ -1,0 +1,7 @@
+<div *ngIf="player">
+<h1>Bienvenue dans votre laboratoire</h1>
+<p>D'ici, vous pourrez ouvrir des portails vers des contrées mystèrieuses et vous emparer de leurs richesse. Le monde est vaste et n'attend qu'une âme valeureuse.</p>
+<p>Cependant, les dangers rodent. De nombreuses épreuves vous attendent, préparez vous !</p>
+<p>Pierres d'éveil restantes : {{ player.stone }}</p>
+<button (click)="openPortal()">Ouvrir un portail</button>
+</div>

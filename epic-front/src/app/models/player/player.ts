@@ -1,5 +1,5 @@
 export class Player {
     name: string;
-    dust: number;
+    stone: number;
     stamina: number;
 }

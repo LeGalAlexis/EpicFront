@@ -7,6 +7,7 @@
 <nav>
     <a class="btn btn-primary" routerLink="/home" routerLinkActive="active">Accueil</a>
     <a class="btn btn-primary" routerLink="/settings" routerLinkActive="active">Paramètres</a>
+    <a class="btn btn-primary" routerLink="/exploration/labo" routerLinkActive="active">Laboratoire</a>
     <a class="btn btn-primary" (click)="logOut()" *ngIf="isLogged()">Se déconnecter</a>
     <a class="btn btn-primary" routerLink="/registering" routerLinkActive="active" *ngIf="!isLogged()">S'inscrire</a>
     <a class="btn btn-primary" routerLink="/login" routerLinkActive="active" *ngIf="!isLogged()">Se connecter</a>

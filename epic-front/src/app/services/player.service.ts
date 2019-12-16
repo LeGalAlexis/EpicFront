@@ -13,22 +13,13 @@ export class PlayerService {
 
     constructor(private http: HttpClient) { }
 
-    getToken(): string {
-        return `Bearer ${localStorage.getItem('jwt')}`;
-    }
-
     refreshPlayer(): void {
         this.http.get("http://localhost:5002/api/player", {
             headers: new HttpHeaders({
-                "Authorization": this.getToken(),
                 "Content-Type": "application/json"
             })
         }).subscribe(response => {
             this.player = response as Player;
-
-
-            //TODO : remove this, test only
-            this.player.stone = 5;
         }, err => {
             console.log(err)
         });

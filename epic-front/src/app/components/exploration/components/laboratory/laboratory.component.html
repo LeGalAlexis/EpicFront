@@ -1,0 +1,8 @@
+<div *ngIf="explorationService.explorationResources">
+<h1>Bienvenue dans votre laboratoire</h1>
+<p>D'ici, vous pourrez ouvrir des portails vers des contrées mystèrieuses et vous emparer de leurs richesse. Le monde est vaste et n'attend qu'une âme valeureuse.</p>
+<p>Cependant, les dangers rodent. De nombreuses épreuves vous attendent, préparez vous !</p>
+<p>Pierres d'éveil restantes : {{ explorationService.explorationResources.gems }}</p>
+<button (click)="openPortal()" class="btn btn-primary" [disabled]="!canOpenPortal()">Ouvrir un portail</button>
+<button (click)="enterCurrentPortal()">Passer le portail</button>
+</div>

@@ -7,6 +7,10 @@ import { Observable } from 'rxjs';
 export class LoginService {
     constructor(private http: HttpClient) { }
 
+    getToken(): string {
+        return `Bearer ${localStorage.getItem('jwt')}`;
+    }
+
     login(form: NgForm): Observable<Object> {
         let credentials = JSON.stringify(form.value);
         return this.http.post("http://localhost:5002/api/auth/login", credentials, {

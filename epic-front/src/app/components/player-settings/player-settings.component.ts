@@ -8,7 +8,7 @@ import { PlayerService } from 'src/app/services/player.service';
 })
 export class PlayerSettingsComponent implements OnInit {
 
-    constructor(private playerService: PlayerService) { }
+    constructor(protected playerService: PlayerService) { }
 
     ngOnInit() {
         this.playerService.refreshPlayer();

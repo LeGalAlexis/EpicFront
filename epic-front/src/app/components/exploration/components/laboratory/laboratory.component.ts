@@ -13,8 +13,8 @@ import { Map } from '../../models/map';
 export class LaboratoryComponent implements OnInit {
  
 
-    constructor(private playerService: PlayerService, private explorationService: ExplorationService
-        , private router: Router) { 
+    constructor(protected playerService: PlayerService, protected explorationService: ExplorationService
+        , protected router: Router) { 
     }
 
     ngOnInit() {

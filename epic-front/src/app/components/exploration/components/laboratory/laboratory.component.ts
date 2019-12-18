@@ -13,7 +13,7 @@ import { Map } from '../../models/map';
 export class LaboratoryComponent implements OnInit {
  
 
-    constructor(private playerService: PlayerService, private explorationService: ExplorationService
+    constructor(private playerService: PlayerService, protected explorationService: ExplorationService
         , private router: Router) { 
     }
 

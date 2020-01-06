@@ -15,6 +15,7 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { HomeComponent } from './components/home/home.component';
 import { ExplorationModule } from './components/exploration/exploration.module';
 import { TokenInterceptor } from './services/token.interceptor';
+import { LoginClient, ExplorationClient, PlayerClient } from './services/main-api.service';
 
 @NgModule({
     declarations: [
@@ -46,7 +47,10 @@ import { TokenInterceptor } from './services/token.interceptor';
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,
             multi: true
-        }
+        },
+        LoginClient,
+        ExplorationClient,
+        PlayerClient
     ],
     bootstrap: [AppComponent]
 })

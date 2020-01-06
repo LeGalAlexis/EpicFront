@@ -1,16 +1,22 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-    <h1>
-        {{ title }}!
-    </h1>
+<div class="row bottom-border-wood">
+    <div *ngIf="playerService.player" class="player-card col">
+        <div class="player-avatar"></div>
+        <div class="player-detail">
+            <span><b>{{ playerService.player.name }}</b></span>
+            <span>niveaux 1 (57%)</span>
+        </div>
+    </div>
+    <nav class="col">
+        <input type="button" class="button-wood" routerLink="/home" routerLinkActive="active" value="Accueil" />
+        <input type="button" class="button-wood" routerLink="/settings" routerLinkActive="active" value="Paramètres">
+        <input type="button" class="button-wood" routerLink="/exploration/labo" routerLinkActive="active"
+            value="Exploration">
+        <input type="button" class="button-wood" (click)="logOut()" *ngIf="isLogged()" value="Se déconnecter">
+        <input type="button" class="button-wood" routerLink="/registering" routerLinkActive="active" *ngIf="!isLogged()"
+            value="S'inscrire">
+        <input type="button" class="button-wood" routerLink="/login" routerLinkActive="active" *ngIf="!isLogged()"
+            value="Se connecter">
+    </nav>
 </div>
-<nav>
-    <a class="btn btn-primary" routerLink="/home" routerLinkActive="active">Accueil</a>
-    <a class="btn btn-primary" routerLink="/settings" routerLinkActive="active">Paramètres</a>
-    <a class="btn btn-primary" routerLink="/exploration/labo" routerLinkActive="active">Laboratoire</a>
-    <a class="btn btn-primary" (click)="logOut()" *ngIf="isLogged()">Se déconnecter</a>
-    <a class="btn btn-primary" routerLink="/registering" routerLinkActive="active" *ngIf="!isLogged()">S'inscrire</a>
-    <a class="btn btn-primary" routerLink="/login" routerLinkActive="active" *ngIf="!isLogged()">Se connecter</a>
-</nav>
 
 <router-outlet></router-outlet>

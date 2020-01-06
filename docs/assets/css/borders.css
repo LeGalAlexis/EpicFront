@@ -1,0 +1,8 @@
+.bottom-border-wood::after { 
+    margin-top: 5px;
+    content:"";
+    height:20px; 
+    width:100%;
+    background:url("../images/wooden-ui/horizontal_thin_border.png");
+    display: flex;
+}

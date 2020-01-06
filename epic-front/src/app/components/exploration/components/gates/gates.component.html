@@ -1,0 +1,12 @@
+<div *ngIf="isInTown()">
+    <h1>Vous êtes aux portes de la ville.</h1>
+    <p>Vous entrevoyez les possibilitées infinies que vous offrent le monde.</p>
+    <p>Cependant, les dangers rodent. De nombreuses épreuves vous attendent, préparez vous !</p>
+    <p>Endurance : {{ explorationService.explorationData.stamina }} / 1000</p>
+    <button class="button-wood" (click)="regenerateStamina()">Reprendre son souffle !</button>
+    <button class="button-wood" (click)="enterMap()">Sortir de la ville</button>
+</div>
+<div class="row" *ngIf="!isInTown()">
+    <app-map class="app-map col" [map]="explorationService.map"></app-map>
+    <app-exploration-actions class="app-actions col"></app-exploration-actions>
+</div>

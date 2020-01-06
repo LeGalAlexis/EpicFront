@@ -1,0 +1,35 @@
+.map-row {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-cell {
+    display: inline-block;
+}
+
+.button-row {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-row button {
+    margin: 5px;
+}
+
+.map {
+    border-image-source: url(/assets/images/wooden-ui/frame.png);
+    border-image-slice: 10;
+    border-image-width: 10;
+}
+
+.map-name {
+    text-align: center;
+    background: url(/assets/images/wooden-ui/Plank_3.png) no-repeat;
+    background-size: 100% 100%;
+    color: beige;
+    font-size: 25px;
+}

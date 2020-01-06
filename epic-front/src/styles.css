@@ -1,2 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~bootstrap/dist/css/bootstrap.min.css';
+@import './assets/css/interface.css';
+@import './assets/css/borders.css';
+
+html,body {
+    height: 100%;
+}
+body {
+    background-color: #222;
+}
+.container-fluid.custom-container {
+    background-color: #b07843;
+    height: 100%;
+    display: inline-block;
+}

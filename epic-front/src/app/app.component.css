@@ -1,7 +1,22 @@
 nav {
-    text-align: center;
+    text-align: right;
+    margin-bottom: 15px;
+    margin-top: 10px;
 }
-nav a {
-    padding: 0 10px;
-    margin: 0 10px;
+nav input {
+    margin: 0 5px;
+}
+.player-avatar {
+    min-width: 70px;
+    min-height: 70px;
+    background-image: url("/assets/images/badges/Badge_rogue.PNG");
+    background-size: 100% 100%;
+}
+.player-card {
+    display: flex;
+}
+.player-detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

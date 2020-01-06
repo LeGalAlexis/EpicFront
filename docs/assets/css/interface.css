@@ -1,0 +1,15 @@
+.button-wood {
+    background: url('../images/wooden-ui/plank_1.png') no-repeat;
+    background-size: 100% 100%;
+    padding: 10px 18px;
+    color: beige;
+    border: none;
+}
+
+.button-wood:hover {
+    color: lightgreen;
+}
+
+.button-wood.active {
+    color: lightgreen;
+}

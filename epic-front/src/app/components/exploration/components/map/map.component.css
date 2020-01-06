@@ -28,7 +28,9 @@
 
 .map-name {
     text-align: center;
-    background: url(/assets/images/wooden-ui/Plank_3.png) no-repeat;
+    min-width: 70px;
+    min-height: 70px;
+    background-image: url("/assets/images/wooden-ui/Plank_3.png");
     background-size: 100% 100%;
     color: beige;
     font-size: 25px;

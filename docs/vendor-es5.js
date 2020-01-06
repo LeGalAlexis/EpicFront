@@ -53476,7 +53476,7 @@ var ɵangular_packages_router_router_lNgFactory = _angular_core__WEBPACK_IMPORTE
 /*!**************************************************!*\
   !*** ./node_modules/@auth0/angular-jwt/index.js ***!
   \**************************************************/
-/*! exports provided: JwtModule, JwtInterceptor, JwtHelperService, JWT_OPTIONS */
+/*! exports provided: JwtInterceptor, JwtHelperService, JWT_OPTIONS, JwtModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

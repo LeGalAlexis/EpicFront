@@ -1,17 +1,22 @@
 <div class="map-name"> {{ map.name }} </div>
-<p>Endurance : {{ explorationService.explorationData.stamina }} / 1000</p>
-<div class="map">
-    <div class="map-row" *ngFor="let rowIndex of getRowsIndex()">
-        <div class="map-cell" *ngFor="let columnIndex of getRowsIndex()">
-            <app-cell [cell]="getCellFromCoordinate(rowIndex, columnIndex)"></app-cell>
+<app-progress-bar [completion]="(explorationService.explorationData.stamina / 1000) * 100" [barText]="'Endurance'">
+</app-progress-bar>
+<div class="map-container">
+    <div class="map">
+        <div class="map-row" *ngFor="let rowIndex of getRowsIndex()">
+            <div class="map-cell" *ngFor="let columnIndex of getRowsIndex()">
+                <app-cell [cell]="getCellFromCoordinate(rowIndex, columnIndex)"></app-cell>
+            </div>
         </div>
     </div>
 </div>
 <div class="map-navigation">
-    <div class="button-row"><button class="button-wood" (click)="goTo(1)" [disabled]="cantGoTo(1)">Aller au <b>Nord</b></button></div>
+    <div class="button-row"><button class="button-wood" (click)="goTo(1)" [disabled]="cantGoTo(1)">Aller au
+            <b>Nord</b></button></div>
     <div class="button-row">
         <button class="button-wood" (click)="goTo(2)" [disabled]="cantGoTo(2)">Aller à l'<b>Ouest</b></button>
         <button class="button-wood" (click)="goTo(0)" [disabled]="cantGoTo(0)">Aller à l'<b>Est</b></button>
     </div>
-    <div class="button-row"><button class="button-wood" (click)="goTo(3)" [disabled]="cantGoTo(3)">Aller au <b>Sud</b></button></div>
+    <div class="button-row"><button class="button-wood" (click)="goTo(3)" [disabled]="cantGoTo(3)">Aller au
+            <b>Sud</b></button></div>
 </div>

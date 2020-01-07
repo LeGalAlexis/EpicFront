@@ -1,8 +1,5 @@
 .map-row {
     display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
 }
 
 .map-cell {
@@ -20,10 +17,14 @@
     margin: 5px;
 }
 
+.map-container {
+    display: flex;
+    justify-content: center;
+}
+
 .map {
-    border-image-source: url(/assets/images/wooden-ui/frame.png);
-    border-image-slice: 10;
-    border-image-width: 10;
+    border: 10px solid transparent;
+    border-image: url(/assets/images/wooden-ui/frame.png) 20 round;
 }
 
 .map-name {

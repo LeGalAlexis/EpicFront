@@ -3,6 +3,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { LoginClient, Login } from 'src/app/services/main-api.service';
+import { PlayerService } from 'src/app/services/player.service';
 
 @Component({
     selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent implements OnInit {
 
     invalidLogin: boolean;
 
-    constructor(private loginClient: LoginClient, private router: Router, private route: ActivatedRoute) {
+    constructor(private loginClient: LoginClient, private router: Router, private route: ActivatedRoute, private playerService: PlayerService) {
         this.route.queryParams.subscribe(params => {
             this.isFromRegistration = params["from"] === "registration";
         });
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
             let token = (<string>response);
             localStorage.setItem("jwt", token);
             this.invalidLogin = false;
+            this.playerService.refreshPlayer();
             this.router.navigate(["/home"]);
         }, err => {
             this.invalidLogin = true;

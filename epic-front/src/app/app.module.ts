@@ -16,6 +16,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ExplorationModule } from './components/exploration/exploration.module';
 import { TokenInterceptor } from './services/token.interceptor';
 import { LoginClient, ExplorationClient, PlayerClient } from './services/main-api.service';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -40,7 +41,8 @@ import { LoginClient, ExplorationClient, PlayerClient } from './services/main-ap
         BsDropdownModule.forRoot(),
         TooltipModule.forRoot(),
         ModalModule.forRoot(),
-        ExplorationModule
+        ExplorationModule,
+        SharedModule
     ],
     providers: [
         {

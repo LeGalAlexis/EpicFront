@@ -27,11 +27,11 @@
 }
 
 .map-name {
+    margin: 15px 0;
     text-align: center;
-    min-width: 70px;
-    min-height: 70px;
-    background-image: url("/assets/images/wooden-ui/Plank_3.png");
+    background-image: url("/assets/images/wooden-ui/Plank_03.png");
     background-size: 100% 100%;
+    border-radius: 15px;
     color: beige;
     font-size: 25px;
 }

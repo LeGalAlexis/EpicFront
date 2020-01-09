@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Cell } from '../../models/cell';
+import { Cell } from 'src/app/services/main-api.service';
 import { ExplorationService } from '../../services/exploration.service';
 
 @Component({

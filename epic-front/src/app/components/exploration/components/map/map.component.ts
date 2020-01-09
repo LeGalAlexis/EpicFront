@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Map } from '../../models/map';
-import { Cell } from '../../models/cell';
 import { ExplorationService } from '../../services/exploration.service';
+import { Map, ExplorationData, Cell } from 'src/app/services/main-api.service';
 
 @Component({
     selector: 'app-map',
@@ -28,6 +27,13 @@ export class MapComponent implements OnInit {
         let playerX = this.explorationService.explorationData.x;
         let playerY = this.explorationService.explorationData.y;
         return this.map.cells.find(c => c.y * -1 === rowIndex - playerY && c.x === columnIndex + playerX);
+    }
+
+    getBackgroundPosition(): string {
+        let posX: number = this.explorationService.explorationData.x * 64 + (3 * 64);
+        let posY: number = -this.explorationService.explorationData.y * 64 + (3 * 64);
+
+        return '-' + posX + 'px -' + posY + 'px';
     }
 
     goTo(direction: number): void {

@@ -17,6 +17,7 @@ import { ExplorationModule } from './components/exploration/exploration.module';
 import { TokenInterceptor } from './services/token.interceptor';
 import { LoginClient, ExplorationClient, PlayerClient } from './services/main-api.service';
 import { SharedModule } from './shared/shared.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [
@@ -42,7 +43,8 @@ import { SharedModule } from './shared/shared.module';
         TooltipModule.forRoot(),
         ModalModule.forRoot(),
         ExplorationModule,
-        SharedModule
+        SharedModule,
+        BrowserAnimationsModule
     ],
     providers: [
         {

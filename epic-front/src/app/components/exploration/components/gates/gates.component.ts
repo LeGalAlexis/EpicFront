@@ -3,7 +3,6 @@ import { PlayerService } from 'src/app/services/player.service';
 import { Player } from 'src/app/models/player/player';
 import { ExplorationService } from '../../services/exploration.service';
 import { Router } from '@angular/router';
-import { Map } from '../../models/map';
 
 @Component({
     selector: 'app-gates',

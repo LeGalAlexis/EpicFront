@@ -7,13 +7,16 @@ import { MapComponent } from './components/map/map.component';
 import { CellComponent } from './components/cell/cell.component';
 import { ExplorationActionsComponent } from './components/exploration-actions/exploration-actions.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CellDetailsComponent } from './components/cell-details/cell-details.component';
+
 
 @NgModule({
   declarations: [
       GatesComponent,
       MapComponent,
       CellComponent,
-      ExplorationActionsComponent
+      ExplorationActionsComponent,
+      CellDetailsComponent
   ],
   imports: [
     CommonModule,

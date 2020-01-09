@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Player } from 'src/app/models/player/player';
 import { PlayerService } from 'src/app/services/player.service';
-import { ExplorationData } from '../models/exploration-data';
 import { Observable } from 'rxjs';
-import { Map } from '../models/map';
+import { Map, ExplorationData } from 'src/app/services/main-api.service';
 import { ExplorationClient } from 'src/app/services/main-api.service';
 
 @Injectable({

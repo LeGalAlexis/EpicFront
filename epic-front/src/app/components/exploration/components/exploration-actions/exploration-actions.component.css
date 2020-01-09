@@ -1,0 +1,65 @@
+.action-section-header-icon {
+    min-width: 22px;
+    display: inline-block;
+    min-height: 22px;
+    border: 1px solid black;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.action-section-header {
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.action-section-body {
+    padding: 15px;
+    border: 1px solid black;
+    border-top: none;
+    display: flex;
+}
+
+.action-section {
+    margin: 20px 0;
+}
+
+.square {
+    height: 55px;
+    width: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grey {
+    background-color: gray;
+    margin: 0 5px;
+}
+
+.janken-player {
+    display: flex;
+    padding: 10px;
+    margin: 5px;
+    background-color: lightblue;
+    border-radius: 7px;
+    min-width: 195px;
+    justify-content: center;
+}
+
+.janken-opponent {
+    padding: 10px;
+    min-height: 55px;
+    min-width: 65px;
+    margin: 5px;
+    background-color: lightcoral;
+    border-radius: 7px;
+}
+
+.janken-outcome {
+    padding: 10px;
+    min-height: 55px;
+    min-width: 55px;
+    margin: 5px;
+    background-color: lightgreen;
+    border-radius: 7px;
+}

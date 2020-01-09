@@ -25,6 +25,8 @@
 .map {
     border: 10px solid transparent;
     border-image: url(/assets/images/wooden-ui/frame.png) 20 round;
+    background-image: url("/assets/images/maps/map0.png");
+    border-radius: 25px;
 }
 
 .map-name {

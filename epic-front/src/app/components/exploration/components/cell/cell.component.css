@@ -1,31 +1,7 @@
 .cell {
-    height: 45px;
-    width: 55px;
+    height: 63px;
+    width: 63px;
     border-top: 1px dotted gray;
     border-left: 1px dotted gray;
-}
-
-.type-0 {
-    background-color: gray;
-}
-
-.type-1 {
-    background-color: lightgreen;
-}
-
-.type-2 {
-    background-color: green;
-}
-
-.type-3 {
-    background-color: brown;
-}
-
-.type-4 {
-    background-color: blue;
-}
-
-.type-none {
-    background-color: black;
 }
 

@@ -1,1 +1,37 @@
-<button class="button-wood" (click)="leaveMap()">Rentrer en ville</button>
+<div class="cell-detail">
+    <app-cell-details [cell]="getCurrentCell()"></app-cell-details>
+</div>
+<div class="action-section">
+    <div class="action-section-header" (click)="isMiscSectionDisplayed = !isMiscSectionDisplayed"><span
+            class="action-section-header-icon">{{ isMiscSectionDisplayed ? '-' : '+' }}</span>Divers</div>
+    <div class="action-section-body" *ngIf="isMiscSectionDisplayed">
+        <button class="button-wood" (click)="leaveMap()">Rentrer en ville</button>
+    </div>
+</div>
+
+<div class="action-section" *ngIf="getCurrentCell().abundance > 0">
+    <div class="action-section-header" (click)="isGatherSectionDisplayed = !isGatherSectionDisplayed"><span
+            class="action-section-header-icon">{{ isGatherSectionDisplayed ? '-' : '+' }}</span>Récolte</div>
+    <div class="action-section-body" *ngIf="isGatherSectionDisplayed">
+        <button class="button-wood" (click)="startTimer()">Récolter</button>
+        <div class="square" [style.background-color]="color"></div>
+    </div>
+</div>
+
+<div class="action-section" *ngIf="getCurrentCell().dangerosity > 0">
+    <div class="action-section-header" (click)="isFightSectionDisplayed = !isFightSectionDisplayed"><span
+            class="action-section-header-icon">{{ isFightSectionDisplayed ? '-' : '+' }}</span>Combat</div>
+    <div class="action-section-body" *ngIf="isFightSectionDisplayed">
+        <div class="janken-player">
+            <div class="square grey" (click)="chooseMove(0)" *ngIf="display0">pierre</div>
+            <div class="square grey" (click)="chooseMove(1)" *ngIf="display1">papier</div>
+            <div class="square grey" (click)="chooseMove(2)" *ngIf="display2">ciseau</div>
+        </div>
+        <div class="janken-opponent">
+            <div @fastShade class="square grey" *ngIf="opponentMove != ''">{{opponentMove}}</div>
+        </div>
+        <div @fastShade class="janken-outcome" *ngIf="outcome != ''">
+            <div class="square">{{ outcome }}</div>
+        </div>
+    </div>
+</div>

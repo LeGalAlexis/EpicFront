@@ -896,11 +896,11 @@ export interface ICell {
 }
 
 export enum CellType {
-    City = 0,
-    Plain = 1,
-    Forest = 2,
-    Mountain = 3,
-    Water = 4,
+    City = "city",
+    Plain = "plain",
+    Forest = "forest",
+    Mountain = "mountain",
+    Water = "water",
 }
 
 export class Login implements ILogin {

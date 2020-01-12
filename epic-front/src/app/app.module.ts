@@ -15,9 +15,14 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { HomeComponent } from './components/home/home.component';
 import { ExplorationModule } from './components/exploration/exploration.module';
 import { TokenInterceptor } from './services/token.interceptor';
-import { LoginClient, ExplorationClient, PlayerClient } from './services/main-api.service';
+import { LoginClient, ExplorationClient, PlayerClient, API_BASE_URL } from './services/main-api.service';
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from 'src/environments/environment';
+
+export function getBaseUrl(): string {
+    return environment.apiUrl;
+  }
 
 @NgModule({
     declarations: [
@@ -54,7 +59,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         },
         LoginClient,
         ExplorationClient,
-        PlayerClient
+        PlayerClient,
+        { provide: API_BASE_URL, useFactory: getBaseUrl }
     ],
     bootstrap: [AppComponent]
 })

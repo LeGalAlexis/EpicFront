@@ -22,7 +22,7 @@ export class ExplorationClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "http://localhost:5002";
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
     }
 
     getExplorationResources(): Observable<ExplorationData> {
@@ -265,7 +265,7 @@ export class ExplorationClient {
         return _observableOf<ExplorationData>(<any>null);
     }
 
-    goTo(dir: number): Observable<ExplorationData> {
+    goTo(dir: Directions): Observable<ExplorationData> {
         let url_ = this.baseUrl + "/api/Exploration/goto/{dir}";
         if (dir === undefined || dir === null)
             throw new Error("The parameter 'dir' must be defined.");
@@ -315,6 +315,106 @@ export class ExplorationClient {
         }
         return _observableOf<ExplorationData>(<any>null);
     }
+
+    gather(): Observable<ExplorationData> {
+        let url_ = this.baseUrl + "/api/Exploration/gather";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGather(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGather(<any>response_);
+                } catch (e) {
+                    return <Observable<ExplorationData>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ExplorationData>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGather(response: HttpResponseBase): Observable<ExplorationData> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ExplorationData.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ExplorationData>(<any>null);
+    }
+
+    fight(style: CombatStyle): Observable<ExplorationData> {
+        let url_ = this.baseUrl + "/api/Exploration/fight";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(style);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFight(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFight(<any>response_);
+                } catch (e) {
+                    return <Observable<ExplorationData>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ExplorationData>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFight(response: HttpResponseBase): Observable<ExplorationData> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ExplorationData.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ExplorationData>(<any>null);
+    }
 }
 
 @Injectable()
@@ -325,10 +425,10 @@ export class LoginClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "http://localhost:5002";
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
     }
 
-    login(user: Login): Observable<string> {
+    login(user: LoginRequestDto): Observable<string> {
         let url_ = this.baseUrl + "/api/auth/login";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -389,7 +489,7 @@ export class PlayerClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "http://localhost:5002";
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
     }
 
     get(): Observable<Player> {
@@ -536,11 +636,11 @@ export class PlayerClient {
         return _observableOf<string>(<any>null);
     }
 
-    register(newPlayer: Player): Observable<string> {
+    register(newPlayerRequest: RegisterRequestDto): Observable<string> {
         let url_ = this.baseUrl + "/api/Player/register";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(newPlayer);
+        const content_ = JSON.stringify(newPlayerRequest);
 
         let options_ : any = {
             body: content_,
@@ -694,6 +794,7 @@ export class ExplorationData implements IExplorationData {
     currentMapId!: number;
     x!: number;
     y!: number;
+    bag?: OwnedItemOfBaseItem[] | undefined;
 
     constructor(data?: IExplorationData) {
         if (data) {
@@ -712,6 +813,11 @@ export class ExplorationData implements IExplorationData {
             this.currentMapId = _data["currentMapId"];
             this.x = _data["x"];
             this.y = _data["y"];
+            if (Array.isArray(_data["bag"])) {
+                this.bag = [] as any;
+                for (let item of _data["bag"])
+                    this.bag!.push(OwnedItemOfBaseItem.fromJS(item));
+            }
         }
     }
 
@@ -730,6 +836,11 @@ export class ExplorationData implements IExplorationData {
         data["currentMapId"] = this.currentMapId;
         data["x"] = this.x;
         data["y"] = this.y;
+        if (Array.isArray(this.bag)) {
+            data["bag"] = [];
+            for (let item of this.bag)
+                data["bag"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -741,6 +852,7 @@ export interface IExplorationData {
     currentMapId: number;
     x: number;
     y: number;
+    bag?: OwnedItemOfBaseItem[] | undefined;
 }
 
 export class Player implements IPlayer {
@@ -748,6 +860,7 @@ export class Player implements IPlayer {
     mail?: string | undefined;
     name?: string | undefined;
     password?: string | undefined;
+    inventory?: Inventory | undefined;
 
     constructor(data?: IPlayer) {
         if (data) {
@@ -764,6 +877,7 @@ export class Player implements IPlayer {
             this.mail = _data["mail"];
             this.name = _data["name"];
             this.password = _data["password"];
+            this.inventory = _data["inventory"] ? Inventory.fromJS(_data["inventory"]) : <any>undefined;
         }
     }
 
@@ -780,6 +894,7 @@ export class Player implements IPlayer {
         data["mail"] = this.mail;
         data["name"] = this.name;
         data["password"] = this.password;
+        data["inventory"] = this.inventory ? this.inventory.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -789,6 +904,325 @@ export interface IPlayer {
     mail?: string | undefined;
     name?: string | undefined;
     password?: string | undefined;
+    inventory?: Inventory | undefined;
+}
+
+export class Inventory implements IInventory {
+    id!: number;
+    resourceItems?: OwnedItemOfResourceItem[] | undefined;
+    trophyItems?: OwnedItemOfTrophyItem[] | undefined;
+
+    constructor(data?: IInventory) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            if (Array.isArray(_data["resourceItems"])) {
+                this.resourceItems = [] as any;
+                for (let item of _data["resourceItems"])
+                    this.resourceItems!.push(OwnedItemOfResourceItem.fromJS(item));
+            }
+            if (Array.isArray(_data["trophyItems"])) {
+                this.trophyItems = [] as any;
+                for (let item of _data["trophyItems"])
+                    this.trophyItems!.push(OwnedItemOfTrophyItem.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Inventory {
+        data = typeof data === 'object' ? data : {};
+        let result = new Inventory();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        if (Array.isArray(this.resourceItems)) {
+            data["resourceItems"] = [];
+            for (let item of this.resourceItems)
+                data["resourceItems"].push(item.toJSON());
+        }
+        if (Array.isArray(this.trophyItems)) {
+            data["trophyItems"] = [];
+            for (let item of this.trophyItems)
+                data["trophyItems"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IInventory {
+    id: number;
+    resourceItems?: OwnedItemOfResourceItem[] | undefined;
+    trophyItems?: OwnedItemOfTrophyItem[] | undefined;
+}
+
+export class OwnedItemOfResourceItem implements IOwnedItemOfResourceItem {
+    id!: number;
+    item?: ResourceItem | undefined;
+    amount!: number;
+
+    constructor(data?: IOwnedItemOfResourceItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.item = _data["item"] ? ResourceItem.fromJS(_data["item"]) : <any>undefined;
+            this.amount = _data["amount"];
+        }
+    }
+
+    static fromJS(data: any): OwnedItemOfResourceItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new OwnedItemOfResourceItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["item"] = this.item ? this.item.toJSON() : <any>undefined;
+        data["amount"] = this.amount;
+        return data; 
+    }
+}
+
+export interface IOwnedItemOfResourceItem {
+    id: number;
+    item?: ResourceItem | undefined;
+    amount: number;
+}
+
+export class BaseItem implements IBaseItem {
+    id!: number;
+    name?: string | undefined;
+
+    constructor(data?: IBaseItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): BaseItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new BaseItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IBaseItem {
+    id: number;
+    name?: string | undefined;
+}
+
+export class ResourceItem extends BaseItem implements IResourceItem {
+    tiers!: number;
+    resType!: ResourceItemType;
+
+    constructor(data?: IResourceItem) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.tiers = _data["tiers"];
+            this.resType = _data["resType"];
+        }
+    }
+
+    static fromJS(data: any): ResourceItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResourceItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tiers"] = this.tiers;
+        data["resType"] = this.resType;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IResourceItem extends IBaseItem {
+    tiers: number;
+    resType: ResourceItemType;
+}
+
+export enum ResourceItemType {
+    Wood = "wood",
+    Rock = "rock",
+    Ore = "ore",
+}
+
+export class OwnedItemOfTrophyItem implements IOwnedItemOfTrophyItem {
+    id!: number;
+    item?: TrophyItem | undefined;
+    amount!: number;
+
+    constructor(data?: IOwnedItemOfTrophyItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.item = _data["item"] ? TrophyItem.fromJS(_data["item"]) : <any>undefined;
+            this.amount = _data["amount"];
+        }
+    }
+
+    static fromJS(data: any): OwnedItemOfTrophyItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new OwnedItemOfTrophyItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["item"] = this.item ? this.item.toJSON() : <any>undefined;
+        data["amount"] = this.amount;
+        return data; 
+    }
+}
+
+export interface IOwnedItemOfTrophyItem {
+    id: number;
+    item?: TrophyItem | undefined;
+    amount: number;
+}
+
+export class TrophyItem extends BaseItem implements ITrophyItem {
+    tiers!: number;
+    trophyType!: TrophyType;
+
+    constructor(data?: ITrophyItem) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.tiers = _data["tiers"];
+            this.trophyType = _data["trophyType"];
+        }
+    }
+
+    static fromJS(data: any): TrophyItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new TrophyItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tiers"] = this.tiers;
+        data["trophyType"] = this.trophyType;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ITrophyItem extends IBaseItem {
+    tiers: number;
+    trophyType: TrophyType;
+}
+
+export enum TrophyType {
+    Blood = "blood",
+    Leather = "leather",
+    Bone = "bone",
+}
+
+export class OwnedItemOfBaseItem implements IOwnedItemOfBaseItem {
+    id!: number;
+    item?: BaseItem | undefined;
+    amount!: number;
+
+    constructor(data?: IOwnedItemOfBaseItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.item = _data["item"] ? BaseItem.fromJS(_data["item"]) : <any>undefined;
+            this.amount = _data["amount"];
+        }
+    }
+
+    static fromJS(data: any): OwnedItemOfBaseItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new OwnedItemOfBaseItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["item"] = this.item ? this.item.toJSON() : <any>undefined;
+        data["amount"] = this.amount;
+        return data; 
+    }
+}
+
+export interface IOwnedItemOfBaseItem {
+    id: number;
+    item?: BaseItem | undefined;
+    amount: number;
 }
 
 export class Map implements IMap {
@@ -903,11 +1337,24 @@ export enum CellType {
     Water = "water",
 }
 
-export class Login implements ILogin {
+export enum Directions {
+    North = 0,
+    Est = 1,
+    South = 2,
+    West = 3,
+}
+
+export enum CombatStyle {
+    Cunning = "cunning",
+    Strategy = "strategy",
+    Strength = "strength",
+}
+
+export class LoginRequestDto implements ILoginRequestDto {
     userName?: string | undefined;
     password?: string | undefined;
 
-    constructor(data?: ILogin) {
+    constructor(data?: ILoginRequestDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -923,9 +1370,9 @@ export class Login implements ILogin {
         }
     }
 
-    static fromJS(data: any): Login {
+    static fromJS(data: any): LoginRequestDto {
         data = typeof data === 'object' ? data : {};
-        let result = new Login();
+        let result = new LoginRequestDto();
         result.init(data);
         return result;
     }
@@ -938,9 +1385,57 @@ export class Login implements ILogin {
     }
 }
 
-export interface ILogin {
+export interface ILoginRequestDto {
     userName?: string | undefined;
     password?: string | undefined;
+}
+
+export class RegisterRequestDto implements IRegisterRequestDto {
+    email?: string | undefined;
+    name?: string | undefined;
+    password?: string | undefined;
+    registeringPassword?: string | undefined;
+
+    constructor(data?: IRegisterRequestDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.email = _data["email"];
+            this.name = _data["name"];
+            this.password = _data["password"];
+            this.registeringPassword = _data["registeringPassword"];
+        }
+    }
+
+    static fromJS(data: any): RegisterRequestDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RegisterRequestDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        data["name"] = this.name;
+        data["password"] = this.password;
+        data["registeringPassword"] = this.registeringPassword;
+        return data; 
+    }
+}
+
+export interface IRegisterRequestDto {
+    email?: string | undefined;
+    name?: string | undefined;
+    password?: string | undefined;
+    registeringPassword?: string | undefined;
 }
 
 export class ApiException extends Error {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, NavigationExtras } from '@angular/router';
 import { PlayerService } from 'src/app/services/player.service';
+import { Player, RegisterRequestDto } from 'src/app/services/main-api.service';
 
 @Component({
     selector: 'app-registration',
@@ -19,7 +20,12 @@ export class RegistrationComponent implements OnInit {
     }
 
     register(form: NgForm) {
-        this.playerService.register(form).subscribe(response => {
+        let newPlayerRegistrationRequest: RegisterRequestDto = new RegisterRequestDto();
+        newPlayerRegistrationRequest.email = form.controls['mail'].value;
+        newPlayerRegistrationRequest.name = form.controls['name'].value;
+        newPlayerRegistrationRequest.password = form.controls['password'].value;
+        newPlayerRegistrationRequest.registeringPassword = form.controls['passwordalpha'].value;
+        this.playerService.register(newPlayerRegistrationRequest).subscribe(response => {
             console.log(response);
             this.invalidForm = false;
             let navigationExtras: NavigationExtras = {

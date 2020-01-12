@@ -3,7 +3,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Player } from 'src/app/models/player/player';
 import { PlayerService } from 'src/app/services/player.service';
 import { Observable } from 'rxjs';
-import { Map, ExplorationData } from 'src/app/services/main-api.service';
+import { Map, ExplorationData, Directions } from 'src/app/services/main-api.service';
 import { ExplorationClient } from 'src/app/services/main-api.service';
 
 @Injectable({
@@ -17,11 +17,7 @@ export class ExplorationService {
     constructor(private http: HttpClient, private explorationClient: ExplorationClient) { }
 
     refreshData(): void {
-        this.http.get("http://localhost:5002/api/exploration/res", {
-            headers: new HttpHeaders({
-                "Content-Type": "application/json"
-            })
-        }).subscribe(response => {
+        this.explorationClient.getExplorationResources().subscribe(response => {
             this.explorationData = response as ExplorationData;
         }, err => {
             console.log(err)
@@ -29,11 +25,7 @@ export class ExplorationService {
     }
 
     refreshMap(): void {
-        this.http.get("http://localhost:5002/api/exploration/map", {
-            headers: new HttpHeaders({
-                "Content-Type": "application/json"
-            })
-        }).subscribe(response => {
+        this.explorationClient.getCurrentMap().subscribe(response => {
             this.map = response as Map;
         }, err => {
             console.log(err)
@@ -41,11 +33,7 @@ export class ExplorationService {
     }
 
     enterMap(): Observable<boolean> {
-        return this.http.post<boolean>("http://localhost:5002/api/exploration/enter", {
-            headers: new HttpHeaders({
-                "Content-Type": "application/json"
-            })
-        });
+        return this.explorationClient.enterDefaultMap();
     }
 
     leaveMap(): void {
@@ -60,12 +48,8 @@ export class ExplorationService {
         })
     }
 
-    goTo(direction: number): void {
-        this.http.post("http://localhost:5002/api/exploration/goto/" + direction, {
-            headers: new HttpHeaders({
-                "Content-Type": "application/json"
-            })
-        }).subscribe(response => {
+    goTo(direction: Directions): void {
+        this.explorationClient.goTo(direction).subscribe(response => {
             this.explorationData = response as ExplorationData;
         }, err => {
             console.log(err)

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { NgForm } from '@angular/forms';
-import { Player } from '../models/player/player';
+import { PlayerClient, Player, RegisterRequestDto } from './main-api.service';
 
 @Injectable({
     providedIn: 'root'
@@ -11,26 +9,17 @@ export class PlayerService {
 
     public player: Player;
 
-    constructor(private http: HttpClient) { }
+    constructor(private playerClient: PlayerClient) { }
 
     refreshPlayer(): void {
-        this.http.get("http://localhost:5002/api/player", {
-            headers: new HttpHeaders({
-                "Content-Type": "application/json"
-            })
-        }).subscribe(response => {
+        this.playerClient.get().subscribe(response => {
             this.player = response as Player;
         }, err => {
             console.log(err)
         });
     }
 
-    register(form: NgForm): Observable<Object> {
-        let newPlayer = JSON.stringify(form.value);
-        return this.http.post("http://localhost:5002/api/player/register", newPlayer, {
-            headers: new HttpHeaders({
-                "Content-Type": "application/json"
-            })
-        });
+    register(request: RegisterRequestDto): Observable<Object> {
+        return this.playerClient.register(request);
     }
 }

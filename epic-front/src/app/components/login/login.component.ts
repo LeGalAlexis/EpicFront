@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { LoginClient, Login } from 'src/app/services/main-api.service';
+import { LoginClient, LoginRequestDto } from 'src/app/services/main-api.service';
 import { PlayerService } from 'src/app/services/player.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
      }
 
     login(form: NgForm) {
-        let user: Login = new Login();
+        let user: LoginRequestDto = new LoginRequestDto();
         user.userName = form.form.get('username').value;
         user.password = form.form.get('password').value;
         this.loginClient.login(user).subscribe(response => {

@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class GatesComponent implements OnInit {
 
-    constructor(protected explorationService: ExplorationService, private router: Router) {
+    constructor(public explorationService: ExplorationService, private router: Router) {
     }
 
     ngOnInit() {

@@ -36,6 +36,13 @@ export class MapComponent implements OnInit {
         return '-' + posX + 'px -' + posY + 'px';
     }
 
+    getBagSize() {
+        if(!this.explorationService.explorationData.bag){
+            return 0;
+        }
+        return (this.explorationService.explorationData.bag.length / 20) * 100
+    }
+
     goTo(direction: number): void {
         let dir: Directions;
         if(direction === 0) {

@@ -316,7 +316,7 @@ export class ExplorationClient {
         return _observableOf<ExplorationData>(<any>null);
     }
 
-    gather(): Observable<ExplorationData> {
+    gather(): Observable<ResourceItem> {
         let url_ = this.baseUrl + "/api/Exploration/gather";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -335,14 +335,14 @@ export class ExplorationClient {
                 try {
                     return this.processGather(<any>response_);
                 } catch (e) {
-                    return <Observable<ExplorationData>><any>_observableThrow(e);
+                    return <Observable<ResourceItem>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ExplorationData>><any>_observableThrow(response_);
+                return <Observable<ResourceItem>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGather(response: HttpResponseBase): Observable<ExplorationData> {
+    protected processGather(response: HttpResponseBase): Observable<ResourceItem> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -353,7 +353,7 @@ export class ExplorationClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ExplorationData.fromJS(resultData200);
+            result200 = ResourceItem.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -361,7 +361,7 @@ export class ExplorationClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ExplorationData>(<any>null);
+        return _observableOf<ResourceItem>(<any>null);
     }
 
     fight(style: CombatStyle): Observable<ExplorationData> {
@@ -794,7 +794,7 @@ export class ExplorationData implements IExplorationData {
     currentMapId!: number;
     x!: number;
     y!: number;
-    bag?: OwnedItemOfBaseItem[] | undefined;
+    bag?: OwnedItem[] | undefined;
 
     constructor(data?: IExplorationData) {
         if (data) {
@@ -816,7 +816,7 @@ export class ExplorationData implements IExplorationData {
             if (Array.isArray(_data["bag"])) {
                 this.bag = [] as any;
                 for (let item of _data["bag"])
-                    this.bag!.push(OwnedItemOfBaseItem.fromJS(item));
+                    this.bag!.push(OwnedItem.fromJS(item));
             }
         }
     }
@@ -852,7 +852,7 @@ export interface IExplorationData {
     currentMapId: number;
     x: number;
     y: number;
-    bag?: OwnedItemOfBaseItem[] | undefined;
+    bag?: OwnedItem[] | undefined;
 }
 
 export class Player implements IPlayer {
@@ -909,8 +909,7 @@ export interface IPlayer {
 
 export class Inventory implements IInventory {
     id!: number;
-    resourceItems?: OwnedItemOfResourceItem[] | undefined;
-    trophyItems?: OwnedItemOfTrophyItem[] | undefined;
+    resourceItems?: OwnedItem[] | undefined;
 
     constructor(data?: IInventory) {
         if (data) {
@@ -927,12 +926,7 @@ export class Inventory implements IInventory {
             if (Array.isArray(_data["resourceItems"])) {
                 this.resourceItems = [] as any;
                 for (let item of _data["resourceItems"])
-                    this.resourceItems!.push(OwnedItemOfResourceItem.fromJS(item));
-            }
-            if (Array.isArray(_data["trophyItems"])) {
-                this.trophyItems = [] as any;
-                for (let item of _data["trophyItems"])
-                    this.trophyItems!.push(OwnedItemOfTrophyItem.fromJS(item));
+                    this.resourceItems!.push(OwnedItem.fromJS(item));
             }
         }
     }
@@ -952,27 +946,22 @@ export class Inventory implements IInventory {
             for (let item of this.resourceItems)
                 data["resourceItems"].push(item.toJSON());
         }
-        if (Array.isArray(this.trophyItems)) {
-            data["trophyItems"] = [];
-            for (let item of this.trophyItems)
-                data["trophyItems"].push(item.toJSON());
-        }
         return data; 
     }
 }
 
 export interface IInventory {
     id: number;
-    resourceItems?: OwnedItemOfResourceItem[] | undefined;
-    trophyItems?: OwnedItemOfTrophyItem[] | undefined;
+    resourceItems?: OwnedItem[] | undefined;
 }
 
-export class OwnedItemOfResourceItem implements IOwnedItemOfResourceItem {
+export class OwnedItem implements IOwnedItem {
     id!: number;
-    item?: ResourceItem | undefined;
+    itemId!: number;
     amount!: number;
+    type!: OwnedItemType;
 
-    constructor(data?: IOwnedItemOfResourceItem) {
+    constructor(data?: IOwnedItem) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -984,14 +973,15 @@ export class OwnedItemOfResourceItem implements IOwnedItemOfResourceItem {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.item = _data["item"] ? ResourceItem.fromJS(_data["item"]) : <any>undefined;
+            this.itemId = _data["itemId"];
             this.amount = _data["amount"];
+            this.type = _data["type"];
         }
     }
 
-    static fromJS(data: any): OwnedItemOfResourceItem {
+    static fromJS(data: any): OwnedItem {
         data = typeof data === 'object' ? data : {};
-        let result = new OwnedItemOfResourceItem();
+        let result = new OwnedItem();
         result.init(data);
         return result;
     }
@@ -999,230 +989,23 @@ export class OwnedItemOfResourceItem implements IOwnedItemOfResourceItem {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["item"] = this.item ? this.item.toJSON() : <any>undefined;
+        data["itemId"] = this.itemId;
         data["amount"] = this.amount;
+        data["type"] = this.type;
         return data; 
     }
 }
 
-export interface IOwnedItemOfResourceItem {
+export interface IOwnedItem {
     id: number;
-    item?: ResourceItem | undefined;
+    itemId: number;
     amount: number;
+    type: OwnedItemType;
 }
 
-export class BaseItem implements IBaseItem {
-    id!: number;
-    name?: string | undefined;
-
-    constructor(data?: IBaseItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): BaseItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new BaseItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface IBaseItem {
-    id: number;
-    name?: string | undefined;
-}
-
-export class ResourceItem extends BaseItem implements IResourceItem {
-    tiers!: number;
-    resType!: ResourceItemType;
-
-    constructor(data?: IResourceItem) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.tiers = _data["tiers"];
-            this.resType = _data["resType"];
-        }
-    }
-
-    static fromJS(data: any): ResourceItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new ResourceItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["tiers"] = this.tiers;
-        data["resType"] = this.resType;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IResourceItem extends IBaseItem {
-    tiers: number;
-    resType: ResourceItemType;
-}
-
-export enum ResourceItemType {
-    Wood = "wood",
-    Rock = "rock",
-    Ore = "ore",
-}
-
-export class OwnedItemOfTrophyItem implements IOwnedItemOfTrophyItem {
-    id!: number;
-    item?: TrophyItem | undefined;
-    amount!: number;
-
-    constructor(data?: IOwnedItemOfTrophyItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.item = _data["item"] ? TrophyItem.fromJS(_data["item"]) : <any>undefined;
-            this.amount = _data["amount"];
-        }
-    }
-
-    static fromJS(data: any): OwnedItemOfTrophyItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new OwnedItemOfTrophyItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["item"] = this.item ? this.item.toJSON() : <any>undefined;
-        data["amount"] = this.amount;
-        return data; 
-    }
-}
-
-export interface IOwnedItemOfTrophyItem {
-    id: number;
-    item?: TrophyItem | undefined;
-    amount: number;
-}
-
-export class TrophyItem extends BaseItem implements ITrophyItem {
-    tiers!: number;
-    trophyType!: TrophyType;
-
-    constructor(data?: ITrophyItem) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.tiers = _data["tiers"];
-            this.trophyType = _data["trophyType"];
-        }
-    }
-
-    static fromJS(data: any): TrophyItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new TrophyItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["tiers"] = this.tiers;
-        data["trophyType"] = this.trophyType;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface ITrophyItem extends IBaseItem {
-    tiers: number;
-    trophyType: TrophyType;
-}
-
-export enum TrophyType {
-    Blood = "blood",
-    Leather = "leather",
-    Bone = "bone",
-}
-
-export class OwnedItemOfBaseItem implements IOwnedItemOfBaseItem {
-    id!: number;
-    item?: BaseItem | undefined;
-    amount!: number;
-
-    constructor(data?: IOwnedItemOfBaseItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.item = _data["item"] ? BaseItem.fromJS(_data["item"]) : <any>undefined;
-            this.amount = _data["amount"];
-        }
-    }
-
-    static fromJS(data: any): OwnedItemOfBaseItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new OwnedItemOfBaseItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["item"] = this.item ? this.item.toJSON() : <any>undefined;
-        data["amount"] = this.amount;
-        return data; 
-    }
-}
-
-export interface IOwnedItemOfBaseItem {
-    id: number;
-    item?: BaseItem | undefined;
-    amount: number;
+export enum OwnedItemType {
+    Resource = 0,
+    Trophy = 1,
 }
 
 export class Map implements IMap {
@@ -1342,6 +1125,89 @@ export enum Directions {
     Est = 1,
     South = 2,
     West = 3,
+}
+
+export class BaseItem implements IBaseItem {
+    id!: number;
+    name?: string | undefined;
+
+    constructor(data?: IBaseItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): BaseItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new BaseItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IBaseItem {
+    id: number;
+    name?: string | undefined;
+}
+
+export class ResourceItem extends BaseItem implements IResourceItem {
+    tiers!: number;
+    resType!: ResourceItemType;
+
+    constructor(data?: IResourceItem) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.tiers = _data["tiers"];
+            this.resType = _data["resType"];
+        }
+    }
+
+    static fromJS(data: any): ResourceItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResourceItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tiers"] = this.tiers;
+        data["resType"] = this.resType;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IResourceItem extends IBaseItem {
+    tiers: number;
+    resType: ResourceItemType;
+}
+
+export enum ResourceItemType {
+    Wood = "wood",
+    Rock = "rock",
+    Ore = "ore",
 }
 
 export enum CombatStyle {

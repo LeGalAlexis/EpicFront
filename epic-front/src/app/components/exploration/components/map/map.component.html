@@ -2,6 +2,7 @@
 <app-progress-bar [completion]="(explorationService.explorationData.stamina / 1000) * 100" [barText]="'Endurance'">
 </app-progress-bar>
 <app-progress-bar [completion]="100" [barText]="'Vie'" [color]="'red'"></app-progress-bar>
+<app-progress-bar [completion]="getBagSize()" [barText]="'Sac'" [color]="'yellow'"></app-progress-bar>
 <div class="map-container">
     <div class="map" [style.background-position]="getBackgroundPosition()">
         <div class="map-row" *ngFor="let rowIndex of getRowsIndex()">
